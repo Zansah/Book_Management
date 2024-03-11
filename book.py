@@ -1,8 +1,13 @@
 import time
 import sys
 
+# bookshelf class should have a Donate, Update Book, Delete Book, Borrow a book, display all books, rating, search for a book, exit
+# have a book class, which should have a title author genre price amount rating 
+
+
+
 class Book:
-    def __init__(self, title, author, genre, price, amount, rating):
+    def __init__(self, title, author, genre, price, amount, rating): 
         self.title = title
         self.author = author
         self.genre = genre
@@ -31,7 +36,7 @@ class Bookshelf:
     def delete_book(self, title):
         updated = []
         for book in self.inventory:
-            if book.title != title:
+            if book.title.title() != title.title():
                 updated.append(book)
         self.inventory = updated
 
@@ -68,28 +73,50 @@ class Bookshelf:
         print("\n")
 
             
-    def display_books(self, title):
-        for book in self.inventory:
-            if book.title == title:
-                print("Book Details")
+    def display_all_books(self):
+        if not self.inventory:
+            print("The library is empty. No books to display.")
+        else:
+            print("All Books in the Library:")
+            for book in self.inventory:
+                print("Book Details:")
                 print(f"Title: {book.title}")
                 print(f"Author: {book.author}")
                 print(f"Genre: {book.genre}")
                 print(f"Price: {book.price}")
-                print(f"Quanitity: {book.amount}")
+                print(f"Amount: {book.amount}")
+                print(f"Available: {book.available_amount}")
+                print(f"Rating: {book.rating}")
+                print("------------------------")
+
+    def display_popular_books(self): # revist in the future
+        pass
+
+        
+
+
+    def search_books(self, title): # add this later
+        for book in self.inventory:
+            if book.title.title() == title.title():
+                print(f"Title: {book.title}")
+                print(f"Author: {book.author}")
+                print(f"Genre: {book.genre}")
+                print(f"Price: {book.price}")
+                print(f"Amount: {book.amount}")
                 print(f"Available: {book.available_amount}")
                 print(f"Rating: {book.rating}")
             else:
-                print(f"{title} was not found within the library here are all the books")
-                print("\n")
-                for book in self.inventory:
-                    print(f"Title: {book.title}, Author: {book.author} ")
-                    print("\n")
+                print(f"No book with the title {title} within the library")
+        
+
+
 
        
 
     def average_rating(self):
         pass
+
+
 
 
 def main():
@@ -115,9 +142,32 @@ def main():
             title = input("Enter the title of the book: ").title()
             author = input("Enter the author of the book: ")
             genre = input("Enter the genre of the book: ")
-            price = float(input("Enter the price of the book: "))
-            amount = int(input("Enter the amount of books you want to donate: "))
-            rating = float(input("Enter the rating for the book: "))
+
+            price_valid = False
+            while not price_valid:
+                try:
+                    price = float(input("Enter the price of the book: "))
+                    price_valid = True
+                except ValueError:
+                    print("Invalid price. Please enter a numeber.")
+
+            amount = int(input("Enter the amount of copies you want to donate: "))
+
+            donated = True
+            while donated:
+                if amount > 10:
+                    print("You donated to many copies try again: ")
+                    amount = int(input("Enter the amount of copies you want to donate: "))
+                else:
+                    donated = False
+
+            rating_vaild = False
+            while not rating_vaild:
+                try:
+                    rating = float(input("Enter the rating of the book: "))
+                    rating_vaild = True
+                except ValueError:
+                    print("Invalid rating. Please enter a number.")
             book = Book(title, author, genre, price, amount, rating)
             shelf.add_book(book)
             shelf.slow_text("Thank you fo your addition!")
@@ -134,8 +184,7 @@ def main():
             title = input("Enter the title of the book you want to return: ").title()
             shelf.return_book(title)
         elif choice == "6":
-            title = input("Enter the title of the book you want to display")
-            shelf.display_books(title)
+            shelf.display_all_books()
         elif choice == "7":
             pass
         elif choice == "8":
