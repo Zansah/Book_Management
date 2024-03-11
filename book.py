@@ -113,8 +113,25 @@ class Bookshelf:
 
        
 
-    def average_rating(self):
-        pass
+    def average_rating(self, title, new_rating):
+        total_rating = 0
+        total_length = 0
+
+        # we first find the book in the inventory
+        for book in self.inventory:
+            if book.title.title() == title.title():
+                total_rating += sum(book.rating)  # takes the sum of the rating of the book in interation
+                total_length += len(book.rating)  # takes the length of the current list
+                book.rating.append(new_rating)  # Add the new rating to the book's ratings
+
+        # the plus one for the new_rating
+        average = (total_rating + new_rating) / (total_length + 1)
+
+        # updating the average rating for all books with the same title
+        for book in self.inventory:
+            if book.title.title() == title.title():
+                book.rating = average
+
 
 
 
@@ -131,8 +148,9 @@ def main():
         print("4. Borrow a book")
         print("5. Return a book")
         print("6. Display all the books")
-        print("7. Leave a rating")
-        print("8. Exit")
+        print("7. Search")
+        print("8. Leave a rating")
+        print("9. Exit")
         print("------------------------")
         choice = input("What would you like to do: ")
 
@@ -186,8 +204,13 @@ def main():
         elif choice == "6":
             shelf.display_all_books()
         elif choice == "7":
-            pass
+            title = input("Enter for the title you are searching for: ")
+            shelf.search_books(title)
         elif choice == "8":
+            title = input("Enter the title of the book you want to rate: ")
+            new_rating = int(input("What would you rate this book: "))
+            shelf.average_rating(title, new_rating)
+        elif choice == "9":
             shelf.slow_text("Have a wonderful day, and we hope to see you again soon!")
             sys.exit()
         else:
